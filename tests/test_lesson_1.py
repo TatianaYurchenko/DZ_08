@@ -12,7 +12,7 @@ from selenium.webdriver.support.select import Select
 
 
 chrom_options = webdriver.ChromeOptions()
-chrom_options.add_argument("--headless")
+# chrom_options.add_argument("--headless")
 chrom_options.add_argument("--window-size=1500, 900")
 service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrom_options)
@@ -25,12 +25,14 @@ URL_CARD_PAGE = "https://www.saucedemo.com/cart.html"
 URL_CHECKOUT_PAGE = "https://www.saucedemo.com/checkout-step-one.html"
 URL_CHECKOUT_PAGE_STEP_TWO = "https://www.saucedemo.com/checkout-step-two.html"
 
+
 LOGIN_FIELD = ("xpath", '//input[@id="user-name"]')
 PASSWORD_FIELD = ("xpath", '//input[@id="password"]')
 lOGIN_BTN = ("xpath", '//input[@type="submit"]')
 LOGIN_ERROR_MESSAGE = ("xpath", '//h3[@data-test="error"]')
 BURGER_MENU = ("xpath", '//button[@id="react-burger-menu-btn"]')
 LOGOUT = ("xpath", '//a[@id="logout_sidebar_link"]')
+ABOUT = ("xpath", '//a[@id="about_sidebar_link"]')
 ADD_TO_CARD_BTM = ("xpath", '(//button[contains(@class,"btn")])[1]')
 ADD_TO_CARD_BTM_IN_INVENTORY_DTL = ("xpath", '(//button[contains(@class,"btn")])[2]')
 CARD = ("xpath", '//div[@id="shopping_cart_container"]')
@@ -67,8 +69,6 @@ def test_auth_negativ():
 
 def test_auth_positive():
     auth_positive()
-    # driver.find_element(*BURGER_MENU).click()
-    # action.move_to_element(wait.until(EC.visibility_of_element_located(LOGOUT))).click().perform()
 
 # Карточка товара
 def test_move_on_inventory_details_by_img():
@@ -221,8 +221,18 @@ def test_filtr_high_low():
     print(lst2)
     assert lst2 == sorted_lst1
 
+# Бургер меню
+def test_logout():
+    auth_positive()
+    driver.find_element(*BURGER_MENU).click()
+    action.move_to_element(wait.until(EC.visibility_of_element_located(LOGOUT))).click().perform()
+    assert driver.current_url == URL_LOGIN_PAGE, 'Wrong URL'
 
-
+def test_About_btm():
+    auth_positive()
+    driver.find_element(*BURGER_MENU).click()
+    action.move_to_element(wait.until(EC.visibility_of_element_located(ABOUT))).click().perform()
+    assert driver.current_url == "https://saucelabs.com/", 'Wrong URL'
 
 def test_2():
     auth_positive()
