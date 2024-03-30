@@ -7,11 +7,12 @@ from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import ActionChains
+from selenium.webdriver.support.select import Select
 
 
 
 chrom_options = webdriver.ChromeOptions()
-# chrom_options.add_argument("--headless")
+chrom_options.add_argument("--headless")
 chrom_options.add_argument("--window-size=1500, 900")
 service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrom_options)
@@ -45,6 +46,8 @@ ZIP = ("xpath", '//input[@id="postal-code"]')
 CONTINUE_BTN = ("xpath", '//input[@id="continue"]')
 FINISH_BTN = ("xpath", '//button[@id="finish"]')
 THANK_TEXT = ("xpath", '//h2[@class="complete-header"]')
+DROPDOWN_ELEMENT = ("xpath", '//select[@class="product_sort_container"]')
+
 
 
 # Авторизация
@@ -143,6 +146,82 @@ def test_make_order():
     assert driver.current_url == URL_CHECKOUT_PAGE_STEP_TWO, 'Wrong URL'
     driver.find_element(*FINISH_BTN).click()
     assert driver.find_element(*THANK_TEXT).text == "Thank you for your order!"
+
+# Фильтр
+
+def test_filtr_a_z():
+    auth_positive()
+    before = driver.find_elements('xpath', '//div[@class="inventory_item_name "]')
+    lst1 = []
+    lst2 = []
+    for i in before:
+        lst1.append(i.text)
+    sorted_lst1 = sorted(lst1)
+    DROPDOWN = Select(driver.find_element(*DROPDOWN_ELEMENT))
+    DROPDOWN.select_by_index(0)
+    after = driver.find_elements('xpath', '//div[@class="inventory_item_name "]')
+    for j in after:
+        lst2.append(j.text)
+    assert lst2 == sorted_lst1
+
+def test_filtr_z_a():
+    auth_positive()
+    before = driver.find_elements('xpath', '//div[@class="inventory_item_name "]')
+    lst1 = []
+    lst2 = []
+    for i in before:
+        lst1.append(i.text)
+    sorted_lst1 = sorted(lst1, reverse=True)
+    DROPDOWN = Select(driver.find_element(*DROPDOWN_ELEMENT))
+    DROPDOWN.select_by_index(1)
+    after = driver.find_elements('xpath', '//div[@class="inventory_item_name "]')
+    for j in after:
+        lst2.append(j.text)
+    assert lst2 == sorted_lst1
+
+def test_filtr_low_high():
+    auth_positive()
+    before = driver.find_elements('xpath', '//div[@class="inventory_item_price"]')
+    lst1 = []
+    lst2 = []
+    for i in before:
+        i = i.text
+        i = i[1:]
+        lst1.append(float(i))
+    sorted_lst1 = sorted(lst1)
+    print(sorted_lst1)
+    DROPDOWN = Select(driver.find_element(*DROPDOWN_ELEMENT))
+    DROPDOWN.select_by_index(2)
+    after = driver.find_elements('xpath', '//div[@class="inventory_item_price"]')
+    for j in after:
+        j = j.text
+        j = j[1:]
+        lst2.append(float(j))
+    print(lst2)
+    assert lst2 == sorted_lst1
+
+def test_filtr_high_low():
+    auth_positive()
+    before = driver.find_elements('xpath', '//div[@class="inventory_item_price"]')
+    lst1 = []
+    lst2 = []
+    for i in before:
+        i = i.text
+        i = i[1:]
+        lst1.append(float(i))
+    sorted_lst1 = sorted(lst1, reverse=True)
+    print(sorted_lst1)
+    DROPDOWN = Select(driver.find_element(*DROPDOWN_ELEMENT))
+    DROPDOWN.select_by_index(3)
+    after = driver.find_elements('xpath', '//div[@class="inventory_item_price"]')
+    for j in after:
+        j = j.text
+        j = j[1:]
+        lst2.append(float(j))
+    print(lst2)
+    assert lst2 == sorted_lst1
+
+
 
 
 def test_2():
