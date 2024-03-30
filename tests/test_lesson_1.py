@@ -21,6 +21,8 @@ action = ActionChains(driver)
 URL_LOGIN_PAGE = "https://www.saucedemo.com/"
 URL_INVENTORY_PAGE = "https://www.saucedemo.com/inventory.html"
 URL_CARD_PAGE = "https://www.saucedemo.com/cart.html"
+URL_CHECKOUT_PAGE = "https://www.saucedemo.com/checkout-step-one.html"
+URL_CHECKOUT_PAGE_STEP_TWO = "https://www.saucedemo.com/checkout-step-two.html"
 
 LOGIN_FIELD = ("xpath", '//input[@id="user-name"]')
 PASSWORD_FIELD = ("xpath", '//input[@id="password"]')
@@ -30,12 +32,19 @@ BURGER_MENU = ("xpath", '//button[@id="react-burger-menu-btn"]')
 LOGOUT = ("xpath", '//a[@id="logout_sidebar_link"]')
 ADD_TO_CARD_BTM = ("xpath", '(//button[contains(@class,"btn")])[1]')
 ADD_TO_CARD_BTM_IN_INVENTORY_DTL = ("xpath", '(//button[contains(@class,"btn")])[2]')
-CARD = ("xpath", '//a[@class="shopping_cart_link"]')
+CARD = ("xpath", '//div[@id="shopping_cart_container"]')
 ITEM_NAME = ("xpath", '(//div[@class="inventory_item_name "])[1]')
 ITEM_TITLE_LINK = ("xpath", '//a[@id="item_4_title_link"]')
 ITEM_IMG_LINK = ("xpath", '//a[@id="item_4_img_link"]')
 ITEM_NAME_IN_CARD = ("xpath", '(//div[@class="inventory_item_name"])[1]')
 INVENTORY_NAME = ("xpath", '//div[contains(@class, "large_size")]')
+CHECKOUT_BTN = ("xpath", '//button[contains(@class,"checkout_button ")]')
+FERST_NAME = ("xpath", '//input[@id="first-name"]')
+lAST_NAME = ("xpath", '//input[@id="last-name"]')
+ZIP = ("xpath", '//input[@id="postal-code"]')
+CONTINUE_BTN = ("xpath", '//input[@id="continue"]')
+FINISH_BTN = ("xpath", '//button[@id="finish"]')
+THANK_TEXT = ("xpath", '//h2[@class="complete-header"]')
 
 
 # Авторизация
@@ -114,6 +123,26 @@ def test_add_good_from_inventory_details():
 def test_delete_good_from_inventory_details():
     test_add_good_from_inventory_details()
     element_is_invisibility(ITEM_NAME_IN_CARD)
+
+#     Оформление заказа
+
+def test_make_order():
+    auth_positive()
+    text_of_item_name = driver.find_element(*ITEM_NAME).text
+    wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
+    driver.find_element(*CARD).click()
+    assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
+    a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
+    assert text_of_item_name == a
+    driver.find_element(*CHECKOUT_BTN).click()
+    assert driver.current_url == URL_CHECKOUT_PAGE, 'Wrong URL'
+    driver.find_element(*FERST_NAME).send_keys('Tatiana')
+    driver.find_element(*lAST_NAME).send_keys('Tatiana')
+    driver.find_element(*ZIP).send_keys('1236')
+    driver.find_element(*CONTINUE_BTN).click()
+    assert driver.current_url == URL_CHECKOUT_PAGE_STEP_TWO, 'Wrong URL'
+    driver.find_element(*FINISH_BTN).click()
+    assert driver.find_element(*THANK_TEXT).text == "Thank you for your order!"
 
 
 def test_2():
