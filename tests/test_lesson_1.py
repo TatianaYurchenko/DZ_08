@@ -116,7 +116,12 @@ def test_delete_good_from_inventory_details():
     element_is_invisibility(ITEM_NAME_IN_CARD)
 
 
-
+def test_2():
+    auth_positive()
+    hr = ("xpath", '//a[@id="item_4_title_link"]')
+    element = driver.find_element(*hr)
+    link = element.get_attribute('href')
+    print(link)
 
 
 # def test_add_goods():
