@@ -12,7 +12,7 @@ from selenium.webdriver.support.select import Select
 
 
 chrom_options = webdriver.ChromeOptions()
-# chrom_options.add_argument("--headless")
+chrom_options.add_argument("--headless")
 chrom_options.add_argument("--window-size=1500, 900")
 service = Service(executable_path=ChromeDriverManager().install())
 driver = webdriver.Chrome(service=service, options=chrom_options)
@@ -24,7 +24,6 @@ URL_INVENTORY_PAGE = "https://www.saucedemo.com/inventory.html"
 URL_CARD_PAGE = "https://www.saucedemo.com/cart.html"
 URL_CHECKOUT_PAGE = "https://www.saucedemo.com/checkout-step-one.html"
 URL_CHECKOUT_PAGE_STEP_TWO = "https://www.saucedemo.com/checkout-step-two.html"
-
 
 LOGIN_FIELD = ("xpath", '//input[@id="user-name"]')
 PASSWORD_FIELD = ("xpath", '//input[@id="password"]')
@@ -95,7 +94,7 @@ def test_add_good():
     auth_positive()
     text_of_item_name = driver.find_element(*ITEM_NAME).text
     wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
-    driver.get(URL_CARD_PAGE)
+    driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
     assert text_of_item_name == a
@@ -105,7 +104,7 @@ def test_delete_good():
     auth_positive()
     text_of_item_name = driver.find_element(*ITEM_NAME).text
     wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
-    driver.get(URL_CARD_PAGE)
+    driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
     assert text_of_item_name == a
@@ -117,7 +116,7 @@ def test_add_good_from_inventory_details():
     text_of_item_name = driver.find_element(*ITEM_NAME).text
     wait.until(EC.element_to_be_clickable(ITEM_TITLE_LINK)).click()
     wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM_IN_INVENTORY_DTL)).click()
-    driver.get(URL_CARD_PAGE)
+    driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
     assert text_of_item_name == a
