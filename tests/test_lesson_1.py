@@ -66,6 +66,13 @@ def test_move_on_inventory_details_by_img():
     a = wait.until(EC.element_to_be_clickable(INVENTORY_NAME)).text
     assert text_of_item_name == a
 
+def test_move_on_inventory_details_by_title():
+    auth_positive()
+    text_of_item_name = driver.find_element(*ITEM_NAME).text
+    wait.until(EC.element_to_be_clickable(ITEM_TITLE_LINK)).click()
+    a = wait.until(EC.element_to_be_clickable(INVENTORY_NAME)).text
+    assert text_of_item_name == a
+
 
 # Корзина
 def element_is_invisibility(loc):
