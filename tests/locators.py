@@ -1,0 +1,2 @@
+class InventoryPageLocators:
+    pass

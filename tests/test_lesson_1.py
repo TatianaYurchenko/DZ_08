@@ -8,7 +8,7 @@ from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
-
+from tests.data import *
 
 
 chrom_options = webdriver.ChromeOptions()
@@ -19,11 +19,7 @@ driver = webdriver.Chrome(service=service, options=chrom_options)
 wait = WebDriverWait(driver, timeout=15)
 action = ActionChains(driver)
 
-URL_LOGIN_PAGE = "https://www.saucedemo.com/"
-URL_INVENTORY_PAGE = "https://www.saucedemo.com/inventory.html"
-URL_CARD_PAGE = "https://www.saucedemo.com/cart.html"
-URL_CHECKOUT_PAGE = "https://www.saucedemo.com/checkout-step-one.html"
-URL_CHECKOUT_PAGE_STEP_TWO = "https://www.saucedemo.com/checkout-step-two.html"
+
 
 LOGIN_FIELD = ("xpath", '//input[@id="user-name"]')
 PASSWORD_FIELD = ("xpath", '//input[@id="password"]')
@@ -54,15 +50,15 @@ DROPDOWN_ELEMENT = ("xpath", '//select[@class="product_sort_container"]')
 # Авторизация
 def auth_positive():
     driver.get(URL_LOGIN_PAGE)
-    driver.find_element(*LOGIN_FIELD).send_keys('standard_user')
-    driver.find_element(*PASSWORD_FIELD).send_keys('secret_sauce')
+    driver.find_element(*LOGIN_FIELD).send_keys(LOGIN)
+    driver.find_element(*PASSWORD_FIELD).send_keys(PASSWORD)
     driver.find_element(*lOGIN_BTN).click()
     assert driver.current_url == URL_INVENTORY_PAGE, "Unexpected page URL"
 
 def test_auth_negativ():
     driver.get(URL_LOGIN_PAGE)
-    driver.find_element(*LOGIN_FIELD).send_keys('user')
-    driver.find_element(*PASSWORD_FIELD).send_keys('user')
+    driver.find_element(*LOGIN_FIELD).send_keys(LOGIN_NEGATIVE)
+    driver.find_element(*PASSWORD_FIELD).send_keys(PASSWORD_NEGATIVE)
     driver.find_element(*lOGIN_BTN).click()
     assert driver.find_element(*LOGIN_ERROR_MESSAGE).text == "Epic sadface: Username and password do not match any user in this service"
 
@@ -97,7 +93,7 @@ def test_add_good():
     driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
-    assert text_of_item_name == a
+    assert text_of_item_name == a, 'Product is missing in the cart'
     wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
 
 def test_delete_good():
@@ -107,9 +103,9 @@ def test_delete_good():
     driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
-    assert text_of_item_name == a
-    wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
+    assert text_of_item_name == a, 'Product wasn\'t removed from the cart'
     element_is_invisibility(ITEM_NAME_IN_CARD)
+    assert not driver.find_elements('xpath', '//*[@id="item_4_title_link"]'), 'Product wasn\'t removed from the cart'
 
 def test_add_good_from_inventory_details():
     auth_positive()
@@ -119,7 +115,7 @@ def test_add_good_from_inventory_details():
     driver.find_element(*CARD).click()
     assert driver.current_url == URL_CARD_PAGE, 'Wrong URL'
     a = wait.until(EC.element_to_be_clickable(ITEM_NAME_IN_CARD)).text
-    assert text_of_item_name == a
+    assert text_of_item_name == a, 'Product is missing in the cart'
     wait.until(EC.element_to_be_clickable(ADD_TO_CARD_BTM)).click()
 
 def test_delete_good_from_inventory_details():
@@ -138,9 +134,9 @@ def test_make_order():
     assert text_of_item_name == a
     driver.find_element(*CHECKOUT_BTN).click()
     assert driver.current_url == URL_CHECKOUT_PAGE, 'Wrong URL'
-    driver.find_element(*FERST_NAME).send_keys('Tatiana')
-    driver.find_element(*lAST_NAME).send_keys('Tatiana')
-    driver.find_element(*ZIP).send_keys('1236')
+    driver.find_element(*FERST_NAME).send_keys(FERST_NAME)
+    driver.find_element(*lAST_NAME).send_keys(LAST_NAME)
+    driver.find_element(*ZIP).send_keys(ZIP)
     driver.find_element(*CONTINUE_BTN).click()
     assert driver.current_url == URL_CHECKOUT_PAGE_STEP_TWO, 'Wrong URL'
     driver.find_element(*FINISH_BTN).click()
@@ -231,7 +227,7 @@ def test_About_btm():
     auth_positive()
     driver.find_element(*BURGER_MENU).click()
     action.move_to_element(wait.until(EC.visibility_of_element_located(ABOUT))).click().perform()
-    assert driver.current_url == "https://saucelabs.com/", 'Wrong URL'
+    assert driver.current_url == URL_ABOUT_PAGE, 'Wrong URL'
 
 def test_2():
     auth_positive()
