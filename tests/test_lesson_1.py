@@ -6,7 +6,8 @@ from tests.locators import *
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
-# action = ActionChains()
+
+
 
 # Авторизация
 def auth_positive(driver):
@@ -179,13 +180,15 @@ def test_filtr_high_low(driver):
 
 # Бургер меню
 def test_logout(driver, wait):
+    action = ActionChains(driver)
     auth_positive(driver)
     driver.find_element(*BURGER_MENU).click()
     action.move_to_element(wait.until(EC.visibility_of_element_located(LOGOUT))).click().perform()
     assert driver.current_url == URL_LOGIN_PAGE, 'Wrong URL'
 
 def test_About_btm(driver, wait):
-    auth_positive()
+    action = ActionChains(driver)
+    auth_positive(driver)
     driver.find_element(*BURGER_MENU).click()
     action.move_to_element(wait.until(EC.visibility_of_element_located(ABOUT))).click().perform()
     assert driver.current_url == URL_ABOUT_PAGE, 'Wrong URL'
