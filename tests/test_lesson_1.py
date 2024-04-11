@@ -8,7 +8,6 @@ from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
 
 
-
 # Авторизация
 def auth_positive(driver):
     driver.get(URL_LOGIN_PAGE)
