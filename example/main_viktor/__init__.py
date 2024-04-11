@@ -18,3 +18,4 @@ def driver():
 def wait(driver):
     wait = WebDriverWait(driver, timeout=15)
     return wait
+

@@ -4,6 +4,7 @@ import pytest
 from tests.data import *
 from tests.locators import *
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver import ActionChains
 from selenium.webdriver.support.select import Select
 
