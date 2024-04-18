@@ -37,6 +37,7 @@ PASSWORD_FIELD = ("xpath", '//input[@id="password"]')
 REGISTER_BTN = ("xpath", "//button[@id='register']")
 CHECKBOX = ("xpath", "//input[@type='checkbox']")
 SUCCESS_MESSAGE = ("xpath", "//p[@id='successMessage']")
+LOADER = ("xpath", "//div[@id='loader']")
 # URLS
 URL_MAIN_PAGE = "https://victoretc.github.io/selenium_waits/"
 
@@ -50,5 +51,12 @@ def test_explisit(driver, wait):
     driver.find_element(*PASSWORD_FIELD).send_keys(PASSWORD)
     driver.find_element(*CHECKBOX).click()
     driver.find_element(*REGISTER_BTN).click()
+    loader_text = wait.until(EC.visibility_of_element_located(LOADER)).text
+    assert loader_text =='Загрузка...'
     success_text = wait.until(EC.element_to_be_clickable(SUCCESS_MESSAGE)).text
     assert success_text == 'Вы успешно зарегистрированы!'
+
+    time.sleep(2)
+
+# allow pasting
+# setTimeout(function(){debugger;}, 3000)
