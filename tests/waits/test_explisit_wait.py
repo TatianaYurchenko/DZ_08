@@ -1,21 +1,17 @@
 import pytest
-import time
 from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.webdriver.support.ui import WebDriverWait
 
 
 @pytest.fixture
-def chrome_options():
-    options = Options()
-    options.add_argument("--window-size=1500, 900")
-    # options.add_argument("--headless")
-    return options
-
-@pytest.fixture
-def driver(chrome_options):
-    driver = webdriver.Chrome(options=chrome_options)
+def driver():
+    chrom_options = webdriver.ChromeOptions()
+    chrom_options.add_argument("--incognito")
+    service = Service(executable_path=ChromeDriverManager().install())
+    driver = webdriver.Chrome(service=service, options=chrom_options)
     yield driver
     driver.quit()
 
@@ -56,7 +52,7 @@ def test_explisit(driver, wait):
     success_text = wait.until(EC.element_to_be_clickable(SUCCESS_MESSAGE)).text
     assert success_text == 'Вы успешно зарегистрированы!'
 
-    time.sleep(2)
+
 
 # allow pasting
 # setTimeout(function(){debugger;}, 3000)
