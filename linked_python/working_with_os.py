@@ -88,4 +88,4 @@ def calculate_all_files_in_dir():
 
 
 
-calculate_all_files_in_dir()
+print(calculate_all_files_in_dir())
