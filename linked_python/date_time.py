@@ -1,7 +1,8 @@
 from datetime import datetime
 from datetime import date
 from datetime import timedelta
-
+import calendar
+#  класс timedelta  для выполнения математических действий с датами
 def main():
     today = date.today()
     print(today)
@@ -31,7 +32,6 @@ def formatting_time():
     print(today.strftime(f'locale time: %X'))
 #  %I/%H - Hour, %M - min, %S - sec, %p - locale's AM/PM
     print(today.strftime(f"%I/%H - Hour, %M - min, %S - sec, %p - locale's AM/PM"))
-
 def scenario_involving_dates():
 # days in future and in the past
 #     future
@@ -51,7 +51,33 @@ def scenario_involving_dates():
         afd = afd.replace(year=today_date.year + 1)
     time_to_afd = afd - today_date
     print("It is", time_to_afd.days," days until the next April Fools' Day!")
-
+# Необходимо импортировать calendar
 def working_with_calendars():
-    pass
-
+    c = calendar.TextCalendar(calendar.MONDAY)
+    str = c.formatmonth(2024, 6, 0, 0)
+    print(str)
+# TODO: create an HTML formatted calendar
+    hc = calendar.HTMLCalendar(calendar.MONDAY)
+    str = hc.formatmonth(2024,1)
+    print(str)
+# TODO: loop over the days of a month
+    #  (zeroes mean that the day of the week is in an overlapping month)
+    for i in c.itermonthdays(2024, 8):
+        print(i)
+def calendar_day():
+    for day in calendar.month_name:
+        print(day)
+def temm_meeting():
+    for m in range(1, 13):
+        cal = calendar.monthcalendar(2024, m)
+        print(m)
+        print(cal)
+        weekone = cal[0]
+        weektwo = cal[1]
+        if weekone[calendar.FRIDAY] != 0:
+            meetday = weekone[calendar.FRIDAY]
+        else:
+            meetday = weektwo[calendar.FRIDAY]
+        print(calendar.month_name[m], meetday)
+        
+temm_meeting()
